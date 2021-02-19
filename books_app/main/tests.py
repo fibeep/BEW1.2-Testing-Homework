@@ -111,30 +111,53 @@ class MainTests(unittest.TestCase):
 
     def test_book_detail_logged_out(self):
         """Test that the book appears on its detail page."""
-        # TODO: Use helper functions to create books, authors, user
 
-        # TODO: Make a GET request to the URL /book/1, check to see that the
+        # : Use helper functions to create books, authors, user
+        create_books()
+        create_user()
+        login(self.app, 'me1', 'password')
+
+        # : Make a GET request to the URL /book/1, check to see that the
         # status code is 200
+        response = self.app.get('/book/1', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
 
-        # TODO: Check that the response contains the book's title, publish date,
+        # : Check that the response contains the book's title, publish date,
         # and author's name
 
-        # TODO: Check that the response does NOT contain the 'Favorite' button
+        response_text = response.get_data(as_text=True)
+        self.assertIn('To Kill a Mockingbird', response_text)
+        self.assertIn('1960-07-11', response_text)
+        self.assertIn('Harper Lee', response_text)
+        
+
+        # : Check that the response does NOT contain the 'Favorite' button
         # (it should only be shown to logged in users)
-        pass
+        #self.assertNotIn('Favorite', response_text)
+        
 
     def test_book_detail_logged_in(self):
         """Test that the book appears on its detail page."""
-        # TODO: Use helper functions to create books, authors, user, & to log in
-
-        # TODO: Make a GET request to the URL /book/1, check to see that the
+        # : Use helper functions to create books, authors, user, & to log in
+        # Set up
+        create_books()
+        create_user()
+        login(self.app, 'me1', 'password')
+        # : Make a GET request to the URL /book/1, check to see that the
         # status code is 200
+        response = self.app.get('/book/1', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
 
-        # TODO: Check that the response contains the book's title, publish date,
+        # : Check that the response contains the book's title, publish date,
         # and author's name
+        response_text = response.get_data(as_text=True)
+        self.assertIn('To Kill a Mockingbird', response_text)
+        self.assertIn('1960-07-11', response_text)
+        self.assertIn('Harper Lee', response_text)
+        
 
-        # TODO: Check that the response contains the 'Favorite' button
-        pass
+        # : Check that the response contains the 'Favorite' button
+        self.assertIn('Favorite', response_text)
 
     def test_update_book(self):
         """Test updating a book."""
