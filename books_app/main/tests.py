@@ -115,8 +115,7 @@ class MainTests(unittest.TestCase):
         # : Use helper functions to create books, authors, user
         create_books()
         create_user()
-        login(self.app, 'me1', 'password')
-
+    
         # : Make a GET request to the URL /book/1, check to see that the
         # status code is 200
         response = self.app.get('/book/1', follow_redirects=True)
@@ -133,7 +132,7 @@ class MainTests(unittest.TestCase):
 
         # : Check that the response does NOT contain the 'Favorite' button
         # (it should only be shown to logged in users)
-        #self.assertNotIn('Favorite', response_text)
+        self.assertNotIn('Favorite', response_text)
         
 
     def test_book_detail_logged_in(self):
@@ -222,10 +221,19 @@ class MainTests(unittest.TestCase):
 
     def test_create_author(self):
         """Test creating an author."""
-        # TODO: Make a POST request to the /create_author route
+        # : Make a POST request to the /create_author route
+        post_data = {
+            'name': 'Author Test',
+            'biography': 'Some information',
+        }
+        self.app.post('/create_author', data=post_data)
+        # : Verify that the author was updated in the database
+        
+        created_author = Author.query.filter_by(name='Author Test').first()
+        
 
-        # TODO: Verify that the author was updated in the database
-        pass
+
+
 
     def test_create_genre(self):
         # TODO: Make a POST request to the /create_genre route, 
