@@ -238,15 +238,19 @@ class MainTests(unittest.TestCase):
 
 
     def test_create_genre(self):
+
+        create_books()
+        create_user()
+        login(self.app, 'me1', 'password')
         # : Make a POST request to the /create_genre route, 
-        # post_data = {
-        #     'name' : 'New Genre'
-        # }
-        # self.app.post('/create_genre', data=post_data)
-        # # : Verify that the genre was updated in the database
-        # created_genre = Genre.query.filter_by(name="New Genre").first()
-        # self.assertIsNotNone(created_genre)
-        pass
+        post_data = {
+            'name' : 'New Genre'
+        }
+        self.app.post('/create_genre', data=post_data)
+        # : Verify that the genre was updated in the database
+        created_genre = Genre.query.filter_by(name="New Genre").first()
+        self.assertIsNotNone(created_genre)
+        
 
 
 
