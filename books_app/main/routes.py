@@ -55,6 +55,7 @@ def create_author():
             name=form.name.data,
             biography=form.biography.data
         )
+
         db.session.add(new_author)
         db.session.commit()
 
