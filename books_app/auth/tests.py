@@ -122,18 +122,35 @@ class MainTests(unittest.TestCase):
             
 
         def test_login_correct_password(self):
-            # TODO: Write a test for the login route. It should:
+            # : Write a test for the login route. It should:
             # - Create a user
+            create_user()
             # - Make a POST request to /login, sending the created username & password
+            post_data = {
+                'username': 'Test User',
+                'password': '12345'
+            }
+            self.app.post('/login', data=post_data)
             # - Check that the user's name is now displayed on the homepage
-            pass
+            response = self.app.get('/login', follow_redirects=True)
+            response_text = response.get_data(as_text=True)
+            self.assertIn('Test User', response_text)
+            
 
         def test_login_nonexistent_user(self):
             # TODO: Write a test for the login route. It should:
             # - Make a POST request to /login, sending a username & password
+            post_data = {
+                'username': 'Test User',
+                'password': '12345'
+            }
+            self.app.post('/login', data=post_data)
             # - Check that the login form is displayed again, with an appropriate
+            response = self.app.get('/login', follow_redirects=True)
+            response_text = response.get_data(as_text=True)
             #   error message
-            pass
+            self.assertIn('Error', response_text)
+            
 
         def test_login_incorrect_password(self):
             # TODO: Write a test for the login route. It should:
