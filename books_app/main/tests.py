@@ -1,3 +1,4 @@
+from books_app.main.routes import favorite_book
 import os
 import unittest
 
@@ -256,26 +257,53 @@ class MainTests(unittest.TestCase):
 
 
     def test_profile_page(self):
-        # TODO : Make a GET request to the /profile/1 route
-       # response = self.app.get('/profile/1', follow_redirects=True)
-        # TODO : Verify that the response shows the appropriate user info
-        # response_text = response.get_data(as_text=True)
-        # self.assertIn('me1', response_text)
-        pass
+        create_books()
+        create_user()
+        login(self.app, 'me1', 'password')
+        #  : Make a GET request to the /profile/<username> route
+        response = self.app.get('/profile/me1', follow_redirects=True)
+        #  : Verify that the response shows the appropriate user info
+        response_text = response.get_data(as_text=True)
+        self.assertIn('me1', response_text)
+        
+
+
+
 
     def test_favorite_book(self):
-        # TODO: Login as the user me1
+        # : Login as the user me1
+        create_books()
+        create_user()
+        login(self.app, 'me1', 'password')
+        # : Make a POST request to the /favorite/1 route
+        
+        self.app.post('/favorite/1')
+        # : Verify that the book with id 1 was added to the user's favorites
+        user = User.query.filter_by(username='me1').one()
+        # book_id = -1
+        # for book in user.favorite_books:
+        #     if book.id == 1:
+        #         book_id = book.id
+        #         print(book_id)
+        
+        # self.assertEqual(1, book_id)
+        book = Book.query.get(1)
+        self.assertIn(book, user.favorite_books)
 
-        # TODO: Make a POST request to the /favorite/1 route
-
-        # TODO: Verify that the book with id 1 was added to the user's favorites
-        pass
 
     def test_unfavorite_book(self):
-        # TODO: Login as the user me1, and add book with id 1 to me1's favorites
+        # : Login as the user me1, and add book with id 1 to me1's favorites
+        create_books()
+        create_user()
+        login(self.app, 'me1', 'password')
+        self.app.post('/favorite/1')
 
-        # TODO: Make a POST request to the /unfavorite/1 route
+        # : Make a POST request to the /unfavorite/1 route
+        self.app.post('/unfavorite/1')
 
-        # TODO: Verify that the book with id 1 was removed from the user's 
+        # : Verify that the book with id 1 was removed from the user's 
         # favorites
-        pass
+        user = User.query.filter_by(username='me1').one()
+        book = Book.query.get(1)
+        self.assertNotIn(book, user.favorite_books)
+        
